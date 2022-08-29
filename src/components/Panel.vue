@@ -2,7 +2,7 @@
   <div class="panel">
     <div class="layui-container">
       <ul>
-        <router-link tag="li" to="/index" class="layui-hide-xs"><a href="">首页</a></router-link>
+        <router-link tag="li" to="/" class="layui-hide-xs"><a href="">首页</a></router-link>
         <router-link tag="li" v-for="(item, index) in lists" :key="'panel' + index" :to="item.path">
           <a href="">
             {{ item.name }}
@@ -10,8 +10,10 @@
           </a>
         </router-link>
         <li class="layui-hide-xs"><span class="line"></span></li>
-        <li class="layui-hide-xs"><a href="">我发表的贴</a></li>
-        <li class="layui-hide-xs"><a href="">我收藏的贴</a></li>
+        <template v-if="isLogin">
+          <li class="layui-hide-xs"><a href="">我发表的贴</a></li>
+          <li class="layui-hide-xs"><a href="">我收藏的贴</a></li>
+        </template>
       </ul>
       <div class="right layui-hide-xs">
         <span class="layui-icon layui-icon-search"></span>
@@ -57,7 +59,8 @@ export default {
           path: '/index/logs',
           isNew: false
         }
-      ]
+      ],
+      isLogin: this.$store.state.isLogin
     }
   }
 }

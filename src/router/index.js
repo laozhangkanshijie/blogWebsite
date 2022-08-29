@@ -57,7 +57,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  linkActiveClass:'layui-this',
+  linkExactActiveClass:'layui-this',
   mode: 'history',
   base: process.env.BASE_URL,
   routes

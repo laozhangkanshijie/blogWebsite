@@ -6361,6 +6361,11 @@ vee-validate@3:
   resolved "https://registry.npmjs.org/vee-validate/-/vee-validate-3.4.14.tgz"
   integrity sha512-Hqqic8G9WcRSIzCxiCPqMZv4qB8JE1lIQqIOLDm2K5BXUiL8d4a2+kqkanv8gQSGDzYpnCQZ7BO/T99Aj05T1Q==
 
+vue-cli-plugin-dayjs@~0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npmmirror.com/vue-cli-plugin-dayjs/-/vue-cli-plugin-dayjs-0.1.2.tgz#0bcca59446617effbb52be1184abb747108e0d14"
+  integrity sha512-D53ETA9KeD5/Yj6YZm07dMefJ9iJZh0yTgJFctg4t+FbUqDRhEKWDpAY86Yjn/HAl0YxUTypUz8hZ4HRTppDPQ==
+
 vue-eslint-parser@^8.0.1:
   version "8.3.0"
   resolved "https://registry.npmmirror.com/vue-eslint-parser/-/vue-eslint-parser-8.3.0.tgz"

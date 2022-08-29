@@ -3,7 +3,7 @@
     <div class="alert">
       <div class="flex">{{ msg }}</div>
       <div v-if="type === 'alert'">
-      <div class="btnCommon success" @click="close()">确ss定</div>
+      <div class="btnCommon success" @click="close()">确定</div>
 
       </div>
       <div v-else class="space-round">

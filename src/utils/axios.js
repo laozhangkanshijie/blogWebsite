@@ -1,9 +1,11 @@
 import axios from 'axios'
 import errorHandle from './errorHandle'
+const CancelToken = axios.CancelToken
 
 class HttpRequest {
   constructor(baseURL) {
     this.baseURL = baseURL
+    this.pending = {}
   }
 
   getInsideConfig() {
@@ -17,11 +19,23 @@ class HttpRequest {
     return config
   }
 
+  removePending(key, isRequest = false) {
+    if (this.pending[key] && isRequest) {
+      this.pending[key]('取消重复请求')
+    }
+    delete this.pending[key]
+  }
+
   interceptors(instance) {
     // Add a request interceptor
     instance.interceptors.request.use(
       (config) => {
         // Do something before request is sent
+        config.cancelToken = new CancelToken((c) => {
+          const key = config.url + '&' + config.method
+          this.removePending(key, true)
+          this.pending[key] = c
+        })
         return config
       },
       (err) => {
@@ -35,6 +49,8 @@ class HttpRequest {
     // Add a response interceptor
     instance.interceptors.response.use(
       (res) => {
+        const key = res.url + '&' + res.method
+        this.removePending(key, true)
         if (res.status === 200) {
           return Promise.resolve(res.data)
         } else {
@@ -60,19 +76,25 @@ class HttpRequest {
   }
 
   get(url, config) {
-    const options = Object.assign({
-      method: 'get',
-      url: url
-    },config)
+    const options = Object.assign(
+      {
+        method: 'get',
+        url: url
+      },
+      config
+    )
     return this.request(options)
   }
 
-  post(url,data, config) {
-    const options = Object.assign({
-      method: 'post',
-      url: url,
-      data:data
-    },config)
+  post(url, data, config) {
+    const options = Object.assign(
+      {
+        method: 'post',
+        url: url,
+        data: data
+      },
+      config
+    )
     return this.request(options)
   }
 }
