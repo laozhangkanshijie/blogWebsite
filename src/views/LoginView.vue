@@ -82,8 +82,8 @@
                   <div class="layui-form-mid svg" @click="getCaptcha" v-html="svg"></div>
                 </div>
               </div>
-            <button type="submit" class="layui-btn">点击登录</button>
-            <a class="front-link" href="">忘记密码</a>
+              <button type="submit" class="layui-btn">点击登录</button>
+              <a class="front-link" href="">忘记密码</a>
             </form>
           </ValidationObserver>
         </div>
@@ -139,17 +139,20 @@ export default {
         password: this.password,
         code: this.code,
         sid: this.sid
-      }).then(res => {
+      }).then((res) => {
         if (res.code === 200) {
-          console.log(res);
+          console.log(res)
+          this.$store.commit('setUserInfo', res.data)
+          this.$store.commit('setIsLogin', true)
           this.username = ''
           this.password = ''
           this.code = ''
-        } else if( res.code === 401) {
+          this.$router.push({ name: 'index' })
+        } else if (res.code === 401) {
           this.$alert(res.msg)
         } else {
           // res.msg = {username: [] , name: [], code}
-          this.$refs.form.setErrors(res.msg);
+          this.$refs.form.setErrors(res.msg)
         }
       })
     }
