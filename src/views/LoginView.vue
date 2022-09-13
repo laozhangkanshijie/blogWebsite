@@ -133,7 +133,7 @@ export default {
       })
     },
     submit() {
-      console.log('submi event')
+      console.log('submit event')
       login({
         username: this.username,
         password: this.password,
@@ -144,6 +144,7 @@ export default {
           console.log(res)
           this.$store.commit('setUserInfo', res.data)
           this.$store.commit('setIsLogin', true)
+          this.$store.commit('setToken', res.token)
           this.username = ''
           this.password = ''
           this.code = ''

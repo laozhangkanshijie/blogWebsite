@@ -44,7 +44,7 @@
           <!-- 调整了Hover的区域 -->
           <li class="layui-nav-item" @mouseover="toggle(true)" @mouseleave="toggle(false)">
             <a class="fly-nav-avatar" :to="{ name: 'center' }">
-              <cite class="layui-hide-xsm.md ">{{ userInfo.name }}</cite>
+              <cite class="layui-hide-xsm.md">{{ userInfo.name }}</cite>
               <!-- <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i> -->
               <i class="layui-badge fly-badge-vip layui-hide-xs" v-show="userInfo.isVip !== '0'"
                 >VIP{{ userInfo.isVip }}</i
@@ -72,7 +72,7 @@
               </dd>
             </dl>
           </li>
-          <div class="fly-nav-msg" v-show="num.message && num.message !== 0">
+          <!-- <div class="fly-nav-msg" v-show="num.message && num.message !== 0">
             {{ num.message }}
           </div>
           <transition name="fade">
@@ -82,7 +82,7 @@
                 <i class="layui-layer-TipsG layui-layer-TipsB"></i>
               </div>
             </div>
-          </transition>
+          </transition> -->
         </template>
       </ul>
     </div>
@@ -90,6 +90,8 @@
 </template>
 
 <script>
+import store from '@/store'
+
 export default {
   neme: 'header',
   data() {
@@ -102,19 +104,30 @@ export default {
       return this.$store.state.isLogin
     },
     userInfo() {
-      return this.$store.state.userInfo || {
-        name: '',
-        pic: '',
-        isVip: 0
-      }
+      return (
+        this.$store.state.userInfo || {
+          name: '',
+          pic: '',
+          isVip: 0
+        }
+      )
     }
   },
   methods: {
-    toggle (value){
-    setTimeout(() => {
-      this.on = value
-    }, 200)
-  }
+    toggle(value) {
+      setTimeout(() => {
+        this.on = value
+      }, 200)
+    },
+    logout() {
+      this.$confirm('确定退出吗？', () => {
+        localStorage.clear()
+        store.commit('setToken', '')
+        store.commit('setUserInfo', '')
+        store.commit('setIsLogin', false)
+        this.$router.push('/')
+      })
+    }
   }
 }
 </script>

@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
+// import jwt from 'jsonwebtoken'
+// import moment from 'dayjs'
 
 const Home = () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
 
@@ -10,14 +13,16 @@ const Index = () => import(/* webpackChunkName: "index" */ '../views/channels/In
 const Template1 = () =>
   import(/* webpackChunkName: "template1" */ '../views/channels/Template1.vue')
 const Center = () => import(/* webpackChunkName: "center" */ '../views/Center.vue')
-const UserCenter = () => import(/* webpackChunkName: "userCenter" */ '../components/user/Center.vue')
+const UserCenter = () =>
+  import(/* webpackChunkName: "userCenter" */ '../components/user/Center.vue')
 const Settings = () => import(/* webpackChunkName: "settings" */ '../components/user/Settings.vue')
 const Posts = () => import(/* webpackChunkName: "posts" */ '../components/user/Posts.vue')
 const Msg = () => import(/* webpackChunkName: "msg" */ '../components/user/Msg.vue')
 const Others = () => import(/* webpackChunkName: "others" */ '../components/user/Others.vue')
 const User = () => import(/* webpackChunkName: "user" */ '../views/User.vue')
 const MyPost = () => import(/* webpackChunkName: "myPost" */ '../components/user/common/MyPost.vue')
-const MyCollection = () => import(/* webpackChunkName: "mycollection" */ '../components/user/common/MyCollection.vue')
+const MyCollection = () =>
+  import(/* webpackChunkName: "mycollection" */ '../components/user/common/MyCollection.vue')
 
 Vue.use(VueRouter)
 
@@ -67,13 +72,14 @@ const routes = [
   {
     path: '/user/:uid',
     name: 'user',
-    props:true,
+    props: true,
     component: User
   },
   {
     path: '/center',
     name: 'center',
     linkActiveClass: 'layui-this',
+    meta: { requiresAuth: true },
     component: Center,
     children: [
       {
@@ -122,6 +128,31 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+  if (token !== '' && token !== null) {
+    const payload = { exp: 1 } // jwt.decode(token)moment().isBefore(moment(payload.exp * 1000))
+    if (payload) {
+      store.commit('setToken', token)
+      store.commit('setUserInfo', userInfo)
+      store.commit('setIsLogin', true)
+    } else {
+      localStorage.clear()
+    }
+  }
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const isLogin = store.state.isLogin
+    if (isLogin) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
